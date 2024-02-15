@@ -48,7 +48,7 @@ const TextInput = (properties: TextInputInterface): ReactElement => {
         onBlur={handleBlur}
         ref={ref}
         onFocus={onFocus}
-        placeholderTextColor={colors.placeHolderColor}
+        placeholderTextColor={colors.fadedGrey}
         editable={!isReadOnly}
         onChangeText={handleChange}
         selectionColor={colors.placeHolderColor}

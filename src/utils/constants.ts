@@ -2,6 +2,7 @@ export const SCREEN = {
   SIGNIN: 'SignIn',
   SIGNUP: 'SignUp',
   HOME: 'Home',
+  DASHBOARD: 'Dashboard',
   AUTH_NAVIGATOR: 'AUTH_NAVIGATOR',
 };
 

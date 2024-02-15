@@ -17,15 +17,15 @@ import Separator from '../../components/Seperator';
 import FormLabel from '../../components/FormLabel';
 import SelectDropDown from '../../components/SelectDropDown';
 import TextInput from '../../components/TextInput';
-import {cities, states} from '../../utils/constants';
+import {SCREEN, cities, states} from '../../utils/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 export const OnBoardingSchema = Yup.object().shape({
-  type: Yup.string().required('This field is required'),
+  // type: Yup.string().required('This field is required'),
   firstName: Yup.string().required('please enter your first name'),
   lastName: Yup.string().required('please enter your last name'),
-  name: Yup.string().required(),
+  // name: Yup.string().required(),
   addressLine1: Yup.string().required('please enter a valid address'),
   addressLine2: Yup.string(),
   pinCode: Yup.string()
@@ -34,10 +34,10 @@ export const OnBoardingSchema = Yup.object().shape({
     .min(6, 'Please enter a valid pincode'),
   state: Yup.string().required('please enter a valid state'),
   city: Yup.string().required('please enter a valid city'),
-  country: Yup.string(),
+  country: Yup.string().required('please enter a valid country'),
 });
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [isChecked, setIsChecked] = useState(true);
   const {userDetails, setUserDetails} = useAuthStore(state => state);
   const {
@@ -66,6 +66,7 @@ const Home = () => {
       console.log('🚀 ~ file: index.tsx:56 ~ Home ~ values', values);
       Keyboard.dismiss();
       setUserDetails(values);
+      navigation.navigate(SCREEN.DASHBOARD);
       try {
         console.log('values ', values);
       } catch (error) {
@@ -83,16 +84,16 @@ const Home = () => {
         size={150}
         style={styles.profileIcon}
       />
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        style={{backgroundColor: 'white'}}>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View
           style={{
+            flex: 1,
+            gap: 10,
             marginHorizontal: 28,
           }}>
           <FormLabel label="First name" isRequired />
           <TextInput
-            inputStyle={{borderRadius: 9}}
+            inputStyle={styles.inputStyle}
             isReadOnly={isFormReadyOnly}
             placeholder={'Enter your first name'}
             defaultValue={userDetails?.firstName}
@@ -101,6 +102,7 @@ const Home = () => {
           />
           <FormLabel label="Last name" isRequired />
           <TextInput
+            inputStyle={styles.inputStyle}
             isReadOnly={isFormReadyOnly}
             label="Last name"
             placeholder={'Enter your last name'}
@@ -111,6 +113,8 @@ const Home = () => {
           />
           <FormLabel label="Address Line 1" isRequired />
           <TextInput
+            value={values.addressLine1}
+            inputStyle={styles.inputStyle}
             placeholder={'Address Line 1'}
             handleChange={handleChange('addressLine1')}
             handleBlur={handleBlur('addressLine1')}
@@ -121,9 +125,11 @@ const Home = () => {
             }
             isReadOnly={isFormReadyOnly}
           />
+          <FormLabel label="Address Line 2" isRequired />
           <TextInput
+            inputStyle={styles.inputStyle}
             isReadOnly={false}
-            value={''}
+            value={values.addressLine2}
             defaultValue=""
             placeholder={'Address Line 2'}
             handleChange={handleChange('addressLine2')}
@@ -132,14 +138,16 @@ const Home = () => {
           />
           <FormLabel label="Pin code" isRequired />
           <TextInput
+            inputStyle={styles.inputStyle}
             isReadOnly={isFormReadyOnly}
+            value={values.pinCode}
             keyboardType="number-pad"
             placeholder={'110024'}
             handleChange={handleChange('pinCode')}
             handleBlur={handleBlur('pinCode')}
-            errorMsg={errors.pinCode && touched.pinCode ? errors.pinCode : ''}
+            errorMsg={errors.pinCode}
           />
-          <View style={{}}>
+          <View style={{gap: 10}}>
             <FormLabel label={'State'} isRequired={true} />
             <SelectDropDown
               key={1}
@@ -157,7 +165,7 @@ const Home = () => {
               <Text style={colors.red[500]}>{errors.state}</Text>
             )}
           </View>
-          <View>
+          <View style={{gap: 10}}>
             <FormLabel label={'City'} isRequired={true} />
             <SelectDropDown
               key={2}
@@ -168,12 +176,14 @@ const Home = () => {
               defaultValue={values.city}
               isSearchable={true}
             />
-            {errors.city && <Text style={colors.red[500]}>{errors.city}</Text>}
+            {errors.city && <Text style={{color:colors.red[500]}}>{errors.city}</Text>}
           </View>
           <FormLabel isRequired label="Country" />
           <TextInput
+            inputStyle={styles.inputStyle}
             errorMsg={errors.country}
-            handleChange={() => {}}
+            handleChange={handleChange('country')}
+            handleBlur={handleBlur('country')}
             placeholder={'India'}
             value={values.country}
             isReadOnly={true}
@@ -182,7 +192,7 @@ const Home = () => {
           <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
             <BouncyCheckbox
               size={25}
-              fillColor="red"
+              fillColor={colors.defaultTheme}
               unfillColor="white"
               text={'Accept terms & conditions'}
               iconStyle={{borderColor: 'red'}}
@@ -201,7 +211,8 @@ const Home = () => {
               !values.state ||
               !values.lastName ||
               !values.firstName ||
-              !values.lastName
+              !values.lastName ||
+              !isChecked
             }
             isLoading={isSubmitting}
             label="Save"
@@ -215,10 +226,12 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   profileIcon: {
-    flex: 1,
     color: colors.defaultTheme,
     alignSelf: 'center',
     marginVertical: 75,
+  },
+  inputStyle: {
+    borderRadius: 9,
   },
 });
 

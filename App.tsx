@@ -6,18 +6,17 @@ import {colors} from './src/utils/colors';
 import {useAuthStore} from './src/store/useAuthStore';
 
 const App = (): React.JSX.Element => {
-  const {hasHydrated, token} = useAuthStore();
+  const {hasHydrated} = useAuthStore();
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? colors.singletons.black : colors.primary[100],
+    backgroundColor: isDarkMode ? colors.singletons.black : 'white',
   };
 
   useEffect(() => {
-    if (!!token && hasHydrated) {
-      // setupAuthAxios(REACT_APP_API_BASE_URL, token);
+    if (hasHydrated) {
     }
-  }, [token, hasHydrated]);
+  }, [hasHydrated]);
   return (
     <NavigationContainer>
       <SafeAreaView style={{flex: 1}}>

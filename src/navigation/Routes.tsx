@@ -7,6 +7,7 @@ import {colors} from '../utils/colors';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignIn from '../screens/Auth/Signin';
 import Home from '../screens/Home';
+import DashBoard from '../screens/DashBoard';
 
 const Stack = createNativeStackNavigator();
 const Routes = () => {
@@ -34,7 +35,7 @@ const Routes = () => {
     );
   }
 
-  return !isUserLoggedIn ? (
+  return isUserLoggedIn ? (
     <Stack.Navigator>
       <Stack.Screen
         options={{headerShown: false}}
@@ -48,6 +49,11 @@ const Routes = () => {
         options={{headerShown: false}}
         name={SCREEN.HOME}
         component={Home}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={SCREEN.DASHBOARD}
+        component={DashBoard}
       />
     </Stack.Navigator>
   );
